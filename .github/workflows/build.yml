@@ -8,12 +8,17 @@ on:
   repository_dispatch:
     types: [run_build]
 
+permissions:
+  contents: write
+
 jobs:
   deploy-docs:
     runs-on: ubuntu-latest
     container: asciidoctor/docker-asciidoctor
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Install dependencies
         run: |
@@ -24,9 +29,10 @@ jobs:
           asciidoctor docs/index.adoc
           find . -name .adoc -exec rm -rf '{}' \;
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        uses: JamesIves/github-pages-deploy-action@v4.7.3
         if: contains(github.ref,'refs/heads/main')
         with:
           branch: gh-pages
           folder: docs
           clean: true
+          token: ${{ secrets.GITHUB_TOKEN }}
