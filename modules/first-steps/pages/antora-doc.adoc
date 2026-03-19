@@ -1,0 +1,214 @@
+= Primer ejemplo: Documentación en Antora
+
+== Introducción a Antora
+
+Antora permite gestionar la documentación de un proyecto como si fuera código. Esto significa que el proceso de documentación se beneficia de las mismas prácticas utilizadas para producir software con éxito.
+
+Algunas de estas prácticas son:
+
+* Almacenar el contenido en un sistema de control de versiones.
+* Separar el contenido, la configuración y la presentación.
+* Aprovechar la automatización para la compilación, validación, verificación y publicación.
+* Reutilización de materiales compartidos (DRY).
+
+Antora ayuda a incorporar estas prácticas en el flujo de trabajo de documentación. Como resultado, la documentación es mucho más fácil de gestionar, mantener y mejorar.
+
+== Creación del repositorio
+
+Para empezar a trabajar solo necesitas un repositorio alojado en GitHub de tipo *público*.
+
+[NOTE]
+====
+Las *GitHub Actions* funcionan tanto con repositorios *públicos* como *privados*. Sin embargo, otras funciones como las *GitHub Pages* solo funcionan con los repositorios *públicos*.
+====
+
+En este repositorio subiremos el contenido de https://github.com/ualcnsa/cicd/archive/232cf038086dc798e51d5201bba9945277562851.zip[un proyecto de documentación en Antora].
+
+1. Descomprimimos el archivo en un directorio
+2. Entramos al directorio y hacemos `git init`
+3. Creamos la rama principal `git checkout -b main`
+4. Hacemos commit de todos los archivos con `git add -A && git commit`
+5. Añadimos el remote de nuestro repositorio `git remote add origin <dirección-repositorio>`
+6. Subimos la rama local `git push origin main``
+
+Nuestro repositorio tiene que tener la siguiente estructura:
+
+image::github-antora-files.png[role="thumb", align="center"]
+
+== Creando el workflow para Antora
+
+A continuación, vamos a añadir un workflow que construya nuestro proyecto en Antora.
+
+Al tratarse de un proyecto basado en NodeJS, utilizaremos una imagen Docker con éste instalado y seguiremos un proceso de construcción común a éste tipo de proyectos.
+
+[NOTE]
+=====
+Para más información sobre la construcción de proyectos Antora https://docs.antora.org/antora/latest/install-and-run-quickstart/
+=====
+
+1. Crea un directorio `.github/workflows`.
+2. En este directorio, crea un fichero llamado `build.yml`.
+3. Copia el siguiente contenido YAML en el fichero anterior.
++
+.build.yml
+[source, yaml]
+----
+name: CI
+
+on: <1>
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: <2>
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: node:16-alpine <3>
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies <4>
+        run: npm install
+
+      - name: Build Antora project <5>
+        run: |
+          cp -R node_modules/@antora/lunr-extension/supplemental_ui/* supplemental-ui/ <6>
+          npx antora local-antora-playbook.yml --fetch <7>
+----
+<1> Se ejecuta al hacer *push* en la rama *main* o un *pull request* con destino *main*.
+<2> Podemos lanzar el workflow cuando queramos.
+<3> Utilizamos una imagen Docker con NodeJS 16 instalado.
+<4> Instalamos las dependencias del proyecto NodeJS.
+<5> Construimos el proyecto Antora.
+<6> Paso extra necesario al utilizar la extensión https://gitlab.com/antora/antora-lunr-extension#user-content-enable-the-search-interface[@antora/lunr-extension]
+<7> Comando para construir la documentación Antora a partir del playbook.
+
+4. Hacemos `commit` de los cambios y hacemos `push` a la rama remota
++
+```
+git add -A && git commit
+git push origin main
+```
+
+Podemos comprobar que todo se ha realizado correctamente, viendo el resultado de la acción.
+
+image::github-antora-build.png[role="thumb", align="center"]
+
+== Descarga de los artefactos (artifacts)
+
+Hemos conseguido configurar un workflow que permite compilar la documentación en Antora cada vez que se hace un pull request, un push a main o de forma manual.
+
+Sin embargo, no tenemos acceso a la página web que se construye.
+
+Si queremos asociar la documentación a cada ejecución tenemos que hacer uso de un action que suba artefactos (artifacts).
+
+1. Vamos al https://github.com/marketplace?type=actions[GitHub Actions Marketplace]
+
+2. Buscamos la palabra `artifact`.
++
+image::github-marketplace-artifact.png[role="thumb", align="center"]
+
+3. Seleccionamos `Upload a Build Artifact` que es un action creado por GitHub.
++
+image::github-marketplace-artifact-desc.png[role="thumb", align="center"]
+
+4. Buscamos como utilizar la action en su documentación.
++
+image::github-marketplace-artifact-doc.png[role="thumb", align="center"]
+
+5. Modificamos nuestro flujo `build.yml`` con un paso extra.
++
+.build.yml
+[source, yaml]
+----
+...
+      # Uploads the generated site
+       - uses: actions/upload-artifact@v3
+         with:
+           name: docs <1>
+           path: docs/ <2>
+----
+<1> Nombre del fichero zip que descargaremos.
+<2> Carpeta con la documentación. Por defecto Antora usa el directorio `docs`
+
+Tras hacer un push o una pull request, se ejecutará el workflow y podemos descargar la documentación en el zip del final de la página.
+
+image::github-antora-artifact.png[role="thumb", align="center"]
+
+== Despliegue en GitHub Pages
+
+Es un servicio de GitHub que ermite publicar páginas en HTML estático o en Jekyll. 
+
+Además proporciona un dominio y url públicas:
+
+* https://organización.github.io
+* https://organización.github.io/repositorio
+
+Podemos desplegar un sitio web mediante un directorio en el repositorio o con una rama especial (gh-pages). 
+
+Este servicio es usado normalmente para despliegue de frontends o portales de documentación de repositorios, como el caso que nos ocupa.
+
+1. Vamos a utilizar el action https://github.com/marketplace/actions/deploy-to-github-pages[`Deploy to GitHub Pages`].
++
+image::github-marketplace-pages.png[role="thumb", align="center"]
+
+2. Leemos la documentación.
++
+[IMPORTANT]
+====
+Si utilizamos un contenedor tenemos que tener instalado `git` y `rsync` para usar esta action.
+
+[source, yaml]
+----
+- name: Install rsync and git
+  run: |
+    apt-get update && apt-get install -y rsync git
+    # apk update && apk add rsync git
+- name: Deploy 
+  uses: JamesIves/github-pages-deploy-action@v4.2.5
+----
+==== 
+
+3. Modificamos los pasos de nuestro flujo `build.yml` como primer y último paso
++
+.build.yml
+[source, yaml]
+----
+    steps:
+       - name: Install git and rsync 📚
+         run: |
+           apk update && apk add git rsync
+
+...
+
+      - name: Deploy 🚀
+         uses: JamesIves/github-pages-deploy-action@v4.2.5
+         if: contains(github.ref,'refs/heads/main') <1>
+         with:
+           branch: gh-pages <2>
+           folder: docs <3>
+           clean: true <4>
+
+----
+<1> Solo se ejecuta si hacemos push a la rama main. Evitamos modificar la rama `gh-pages` al construir una pull request.
+<2> La rama donde vamos a desplegar.
+<3> La carpeta que queremos desplegar.
+<4> Si queremos limpiar la rama para evitar que ficheros no existentes se queden en la rama.
+
+4. Hacemos commit y subimos los cambios.
+5. Una vez se ha ejecutado la acción, configuramos el soporte para *GitHub Pages*. Entramos en `Settings > Pages` y seleccionamos la rama `gh-pages` como origen.
++
+image::github-pages.png[role="thumb", align="center"]
+
+6. En esta página podemos consultar la `url` de la documentación desplegada.
+
+[IMPORTANT]
+====
+*EJERCICIOS (Optativos)* 
+
+. Añade un nuevo paso que permita crear un release a partir de la creación de un tag. Puedes basarte en el siguiente https://github.com/frangarcj/ff3_vita/blob/master/.github/workflows/compilation.yml#L38[ejemplo].
+
+====

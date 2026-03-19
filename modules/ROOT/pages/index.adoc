@@ -1,0 +1,27 @@
+////
+Nombre y título del trabajo
+////
+= Despliegue continuo con GitHub Actions
+:navtitle: Introducción
+
+Computación en la Nube, Servicios y Aplicaciones. Francisco García <paco.garcia@ual.es>, Joaquín Cañadas <jjcanada@ual.es>
+
+_Version_ *{page-component-display-version}*
+
+
+////
+COLOCA A CONTINUACION LOS OBJETIVOS
+////
+.Objetivos
+====
+* Crear una infraestructura de CI/CD en GitHub mediante el uso de GitHub Actions
+* Diseñar flujos de trabajo para la construcción y despliegue automatizado de portales de documentación y aplicaciones NodeJs
+====
+
+.Realización y entrega
+****
+La realización de estas actividades se realizará de forma **individual**. 
+La entrega será mediante el envío de un informe y el acceso al profesor a los servicios configurados por cada estudiante, para la revisión y evaluación de los mismos. 
+****
+
+Esta es la versión *{page-component-display-version}* de este documento.

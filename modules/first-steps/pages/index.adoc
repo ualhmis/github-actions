@@ -1,0 +1,14 @@
+= Primeros pasos con GitHub Actions
+:navtitle: Primeros pasos con GitHub Actions
+
+////
+COLOCA A CONTINUACION LOS OBJETIVOS
+////
+.Objetivos
+====
+* Vamos a añadir en un repositorio nuestro primer flujo de trabajo con GitHub Actions.
+
+* Crearemos un flujo de trabajo para construir una aplicación Java basada en Maven y ejecutaremos los tests unitarios.
+====
+
+
