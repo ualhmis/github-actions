@@ -1,7 +1,7 @@
 ////
 Nombre y título del trabajo
 ////
-= Despliegue continuo con GitHub Actions
+= Integración Continua (CI) con GitHub Actions
 :navtitle: Introducción
 
 Herramientas y Métodos en Ingeniería del Software. Joaquín Cañadas <jjcanada@ual.es>,  Francisco García <paco.garcia@ual.es>
@@ -15,7 +15,7 @@ COLOCA A CONTINUACION LOS OBJETIVOS
 .Objetivos
 ====
 * Crear una infraestructura de CI/CD en GitHub mediante el uso de GitHub Actions
-* Diseñar flujos de trabajo para la construcción automatizada 
+* Diseñar flujos de trabajo para la construcción automatizada de proyectos Java
 ====
 
 .Realización y entrega
