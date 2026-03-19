@@ -3,7 +3,7 @@ name: Deploy docs
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
   repository_dispatch:
     types: [run_build]
