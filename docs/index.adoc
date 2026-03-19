@@ -1,0 +1,52 @@
+////
+EXTRA Asccidoc file  including all modules in the repo
+Generates Asciidoc "native" full document, as classic Asciidoc alone document, enabling pdf generation.
+
+This file could be automatically generated from antora.yml 
+See an exameple here:
+https://github.com/settermjd/antora-nav-to-asciidoctor-pdf-config-line-converter
+
+////
+
+
+
+////
+Codificación, idioma, tabla de contenidos, tipo de documento
+////
+:encoding: utf-8
+:lang: es
+:toc: right
+:toc-title: Tabla de contenidos
+:keywords: CI Actions Github
+:doctype: book
+:icons: font
+
+////
+/// activar btn:
+////
+:experimental:
+
+:source-highlighter: rouge
+:rouge-linenums-mode: inline
+
+// :highlightjsdir: ./highlight
+
+:figure-caption: Fig.
+:example-caption!: 
+
+
+:page-component-display-version: 0.26.1
+
+// :leveloffset: 1
+
+//includes
+:section: ROOT
+:sectionPath: modules/{section}/pages
+:imagesdir: modules/{section}/images
+include::{sectionPath}/index.adoc[]
+
+:section: first-steps
+:sectionPath: modules/{section}/pages
+:imagesdir: modules/{section}/images
+include::{sectionPath}/index.adoc[]
+include::{sectionPath}/first-project.adoc[leveloffset=+1]
