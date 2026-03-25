@@ -41,6 +41,9 @@ Codificación, idioma, tabla de contenidos, tipo de documento
 
 :docinfo: shared-footer
 
+// Eliminar el bloque final "last updated"
+:reproducible: 
+
 :page-component-display-version: 0.26.1
 
 // :leveloffset: 1
