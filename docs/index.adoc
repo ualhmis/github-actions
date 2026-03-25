@@ -34,6 +34,12 @@ Codificación, idioma, tabla de contenidos, tipo de documento
 :figure-caption: Fig.
 :example-caption!: 
 
+////
+///  Copy button on code blocks
+////
+[.doc]
+
+:docinfo: shared-footer
 
 :page-component-display-version: 0.26.1
 
@@ -48,5 +54,4 @@ include::{sectionPath}/index.adoc[]
 :section: first-steps
 :sectionPath: modules/{section}/pages
 :imagesdir: modules/{section}/images
-include::{sectionPath}/index.adoc[]
-include::{sectionPath}/first-project.adoc[leveloffset=+1]
+include::{sectionPath}/gh-actons-101.adoc[leveloffset=0]

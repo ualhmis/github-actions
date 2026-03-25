@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.17">
-<meta name="keywords" content="CI/CD Jenkins Pipelines NodeJs Docker KeystoneJs">
-<title>Despliegue continuo con GitHub Actions</title>
+<meta name="generator" content="Asciidoctor 2.0.23">
+<meta name="keywords" content="CI Actions Github">
+<title>Integración Continua (CI) con GitHub Actions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -85,10 +85,10 @@ code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;
 ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
 ul,ol{margin-left:1.5em}
 ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
-ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
-ul.square{list-style-type:square}
 ul.circle{list-style-type:circle}
 ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
 ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
 dl dt{margin-bottom:.3125em;font-weight:bold}
 dl dd{margin-bottom:1.25em}
@@ -141,7 +141,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
-#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
 #header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
@@ -163,6 +163,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
 #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
@@ -209,13 +210,10 @@ table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
 .exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
-.exampleblock>.content>:first-child{margin-top:0}
-.exampleblock>.content>:last-child{margin-bottom:0}
 .sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
-.sidebarblock>:first-child{margin-top:0}
-.sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
-.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
 .literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
@@ -331,7 +329,7 @@ a.image{text-decoration:none;display:inline-block}
 a.image object{pointer-events:none}
 sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
 sup.footnote a,sup.footnoteref a{text-decoration:none}
-sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
 #footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
 #footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
@@ -394,7 +392,7 @@ b.conum *{color:inherit!important}
 dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
 h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
 p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
-p,blockquote,dt,td.content,span.alt,summary{font-size:1.0625rem}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
 p{margin-bottom:1.25rem}
 .sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
 .exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
@@ -440,259 +438,142 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <style>
 pre.rouge table td { padding: 5px; }
 pre.rouge table pre { margin: 0; }
-pre.rouge .cm {
-  color: #999988;
-  font-style: italic;
+pre.rouge, pre.rouge .w {
+  color: #24292f;
+  background-color: #f6f8fa;
 }
-pre.rouge .cp {
-  color: #999999;
-  font-weight: bold;
-}
-pre.rouge .c1 {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .cs {
-  color: #999999;
-  font-weight: bold;
-  font-style: italic;
-}
-pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .err {
-  color: #a61717;
-  background-color: #e3d2d2;
-}
-pre.rouge .gd {
-  color: #000000;
-  background-color: #ffdddd;
-}
-pre.rouge .ge {
-  color: #000000;
-  font-style: italic;
+pre.rouge .k, pre.rouge .kd, pre.rouge .kn, pre.rouge .kp, pre.rouge .kr, pre.rouge .kt, pre.rouge .kv {
+  color: #cf222e;
 }
 pre.rouge .gr {
-  color: #aa0000;
+  color: #f6f8fa;
 }
-pre.rouge .gh {
-  color: #999999;
+pre.rouge .gd {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+pre.rouge .nb {
+  color: #953800;
+}
+pre.rouge .nc {
+  color: #953800;
+}
+pre.rouge .no {
+  color: #953800;
+}
+pre.rouge .nn {
+  color: #953800;
+}
+pre.rouge .sr {
+  color: #116329;
+}
+pre.rouge .na {
+  color: #116329;
+}
+pre.rouge .nt {
+  color: #116329;
 }
 pre.rouge .gi {
-  color: #000000;
-  background-color: #ddffdd;
+  color: #116329;
+  background-color: #dafbe1;
 }
-pre.rouge .go {
-  color: #888888;
+pre.rouge .ges {
+  font-weight: bold;
+  font-style: italic;
 }
-pre.rouge .gp {
-  color: #555555;
+pre.rouge .kc {
+  color: #0550ae;
 }
-pre.rouge .gs {
+pre.rouge .l, pre.rouge .ld, pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mx {
+  color: #0550ae;
+}
+pre.rouge .sb {
+  color: #0550ae;
+}
+pre.rouge .bp {
+  color: #0550ae;
+}
+pre.rouge .ne {
+  color: #0550ae;
+}
+pre.rouge .nl {
+  color: #0550ae;
+}
+pre.rouge .py {
+  color: #0550ae;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .vm {
+  color: #0550ae;
+}
+pre.rouge .o, pre.rouge .ow {
+  color: #0550ae;
+}
+pre.rouge .gh {
+  color: #0550ae;
   font-weight: bold;
 }
 pre.rouge .gu {
-  color: #aaaaaa;
-}
-pre.rouge .gt {
-  color: #aa0000;
-}
-pre.rouge .kc {
-  color: #000000;
+  color: #0550ae;
   font-weight: bold;
 }
-pre.rouge .kd {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kn {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kp {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kr {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kt {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .k, pre.rouge .kv {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .mf {
-  color: #009999;
-}
-pre.rouge .mh {
-  color: #009999;
-}
-pre.rouge .il {
-  color: #009999;
-}
-pre.rouge .mi {
-  color: #009999;
-}
-pre.rouge .mo {
-  color: #009999;
-}
-pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
-  color: #009999;
-}
-pre.rouge .sa {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .sb {
-  color: #d14;
-}
-pre.rouge .sc {
-  color: #d14;
-}
-pre.rouge .sd {
-  color: #d14;
-}
-pre.rouge .s2 {
-  color: #d14;
-}
-pre.rouge .se {
-  color: #d14;
-}
-pre.rouge .sh {
-  color: #d14;
-}
-pre.rouge .si {
-  color: #d14;
-}
-pre.rouge .sx {
-  color: #d14;
-}
-pre.rouge .sr {
-  color: #009926;
-}
-pre.rouge .s1 {
-  color: #d14;
-}
-pre.rouge .ss {
-  color: #990073;
-}
-pre.rouge .s, pre.rouge .dl {
-  color: #d14;
-}
-pre.rouge .na {
-  color: #008080;
-}
-pre.rouge .bp {
-  color: #999999;
-}
-pre.rouge .nb {
-  color: #0086B3;
-}
-pre.rouge .nc {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .no {
-  color: #008080;
+pre.rouge .s, pre.rouge .sa, pre.rouge .sc, pre.rouge .dl, pre.rouge .sd, pre.rouge .s2, pre.rouge .se, pre.rouge .sh, pre.rouge .sx, pre.rouge .s1, pre.rouge .ss {
+  color: #0a3069;
 }
 pre.rouge .nd {
-  color: #3c5d5d;
-  font-weight: bold;
-}
-pre.rouge .ni {
-  color: #800080;
-}
-pre.rouge .ne {
-  color: #990000;
-  font-weight: bold;
+  color: #8250df;
 }
 pre.rouge .nf, pre.rouge .fm {
-  color: #990000;
+  color: #8250df;
+}
+pre.rouge .err {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cm, pre.rouge .cp, pre.rouge .cpf, pre.rouge .c1, pre.rouge .cs {
+  color: #6e7781;
+}
+pre.rouge .gl {
+  color: #6e7781;
+}
+pre.rouge .gt {
+  color: #6e7781;
+}
+pre.rouge .ni {
+  color: #24292f;
+}
+pre.rouge .si {
+  color: #24292f;
+}
+pre.rouge .ge {
+  color: #24292f;
+  font-style: italic;
+}
+pre.rouge .gs {
+  color: #24292f;
   font-weight: bold;
-}
-pre.rouge .nl {
-  color: #990000;
-  font-weight: bold;
-}
-pre.rouge .nn {
-  color: #555555;
-}
-pre.rouge .nt {
-  color: #000080;
-}
-pre.rouge .vc {
-  color: #008080;
-}
-pre.rouge .vg {
-  color: #008080;
-}
-pre.rouge .vi {
-  color: #008080;
-}
-pre.rouge .nv, pre.rouge .vm {
-  color: #008080;
-}
-pre.rouge .ow {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .o {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .w {
-  color: #bbbbbb;
-}
-pre.rouge {
-  background-color: #f8f8f8;
 }
 </style>
 </head>
-<body class="book toc2 toc-right">
+<body class="book toc2 toc-right doc">
 <div id="header">
-<h1>Despliegue continuo con GitHub Actions</h1>
+<h1>Integración Continua (CI) con GitHub Actions</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Tabla de contenidos</div>
-<ul class="sectlevel0">
-<li><a href="#_primeros_pasos_con_github_actions">Primeros pasos con GitHub Actions</a>
 <ul class="sectlevel1">
-<li><a href="#_comenzando_con_github_actions">Comenzando con GitHub Actions</a>
+<li><a href="#_introducción_a_github_actions">1. Introducción a GitHub Actions</a></li>
+<li><a href="#_componentes_de_github_actions">2. Componentes de GitHub Actions</a></li>
+<li><a href="#_creando_tu_primer_workflow">3. Creando tu primer workflow</a>
 <ul class="sectlevel2">
-<li><a href="#_introducción_a_github_actions">Introducción a GitHub Actions</a></li>
-<li><a href="#_creación_del_repositorio">Creación del repositorio</a></li>
-<li><a href="#_creando_tu_primer_workflow">Creando tu primer workflow</a></li>
-<li><a href="#_comprobando_el_resultado">Comprobando el resultado</a></li>
+<li><a href="#_comprobando_el_resultado">3.1. Comprobando el resultado</a></li>
 </ul>
 </li>
-<li><a href="#_primer_ejemplo_documentación_en_antora">Primer ejemplo: Documentación en Antora</a>
+<li><a href="#_action_javamaven_build">4. Action Java/Maven build</a>
 <ul class="sectlevel2">
-<li><a href="#_introducción_a_antora">Introducción a Antora</a></li>
-<li><a href="#_creación_del_repositorio_2">Creación del repositorio</a></li>
-<li><a href="#_creando_el_workflow_para_antora">Creando el workflow para Antora</a></li>
-<li><a href="#_descarga_de_los_artefactos_artifacts">Descarga de los artefactos (artifacts)</a></li>
-<li><a href="#_despliegue_en_github_pages">Despliegue en GitHub Pages</a></li>
+<li><a href="#_resultado_del_build">4.1. Resultado del build</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#_aplicación_en_nodejs">Aplicación en NodeJS</a>
-<ul class="sectlevel1">
-<li><a href="#_hola_mundo_en_nodejs"><em>Hola mundo</em> en NodeJS</a>
-<ul class="sectlevel2">
-<li><a href="#_creación_del_repositorio_3">Creación del repositorio</a></li>
-<li><a href="#_creación_del_workflow_en_github_actions">Creación del workflow en GitHub Actions</a></li>
-<li><a href="#_informe_de_cobertura">Informe de cobertura</a></li>
-<li><a href="#_análisis_estático_de_código">Análisis estático de código</a></li>
-<li><a href="#_despliegue_en_la_vm">Despliegue en la VM</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a href="#_estado_de_la_construcción">5. Estado de la construcción</a></li>
+<li><a href="#_conclusión">Conclusión</a></li>
 </ul>
 </div>
 </div>
@@ -700,10 +581,10 @@ pre.rouge {
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Computación en la Nube, Servicios y Aplicaciones. Joaquín Cañadas &lt;<a href="mailto:jjcanada@ual.es">jjcanada@ual.es</a>&gt;, Francisco García &lt;<a href="mailto:paco.garcia@ual.es">paco.garcia@ual.es</a>&gt;</p>
+<p>Herramientas y Métodos en Ingeniería del Software. Joaquín Cañadas &lt;<a href="mailto:jjcanada@ual.es">jjcanada@ual.es</a>&gt;,  Francisco García &lt;<a href="mailto:paco.garcia@ual.es">paco.garcia@ual.es</a>&gt;</p>
 </div>
 <div class="paragraph">
-<p><em>Version</em> <strong>0.22.2</strong></p>
+<p><em>Version</em> <strong>0.26.1</strong></p>
 </div>
 <div class="exampleblock">
 <div class="title">Objetivos</div>
@@ -714,7 +595,7 @@ pre.rouge {
 <p>Crear una infraestructura de CI/CD en GitHub mediante el uso de GitHub Actions</p>
 </li>
 <li>
-<p>Diseñar flujos de trabajo para la construcción y despliegue automatizado de portales de documentación y aplicaciones NodeJs</p>
+<p>Diseñar flujos de trabajo para la construcción automatizada de proyectos Java</p>
 </li>
 </ul>
 </div>
@@ -724,39 +605,14 @@ pre.rouge {
 <div class="content">
 <div class="title">Realización y entrega</div>
 <div class="paragraph">
-<p>La realización de estas actividades se realizará de forma <strong>individual</strong>. Serán la base para actividades posteriores que ser harán en equipo.
+<p>La realización de estas actividades se realizará de forma <strong>individual</strong>.
 La entrega será mediante el envío de un informe y el acceso al profesor a los servicios configurados por cada estudiante, para la revisión y evaluación de los mismos.</p>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>Esta es la versión <strong>0.22.2</strong> de este documento.</p>
+<p>Esta es la versión <strong>0.26.1</strong> de este documento.</p>
 </div>
-</div>
-</div>
-<h1 id="_primeros_pasos_con_github_actions" class="sect0">Primeros pasos con GitHub Actions</h1>
-<div class="openblock partintro">
-<div class="content">
-<div class="exampleblock">
-<div class="title">Objetivos</div>
-<div class="content">
-<div class="ulist">
-<ul>
-<li>
-<p>Vamos a crear un repositorio vacio donde crear nuestro primer flujo de trabajo con GitHub Actions.</p>
-</li>
-<li>
-<p>Después, con el <a href="https://github.com/ualcnsa/cicd">repositorio con la documentación de la asignatura</a> crearemos los primeros ejemplos de GitHub Actions que nos permitirán crear artefactos y desplegar la documentación en HTML en GitHub Pages.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_comenzando_con_github_actions">Comenzando con GitHub Actions</h2>
-<div class="sectionbody">
 <div class="exampleblock">
 <div class="title">Objetivos</div>
 <div class="content">
@@ -768,12 +624,18 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 <li>
 <p>Probar un flujo de trabajo sencillo para familiarizarse con la plataforma.</p>
 </li>
+<li>
+<p>Crear un flujo de trabajo para construir un proyecto Java con Maven.</p>
+</li>
 </ul>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_introducción_a_github_actions">Introducción a GitHub Actions</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introducción_a_github_actions">1. Introducción a GitHub Actions</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><strong>GitHub Actions</strong> es una <strong>plataforma</strong> de integración continua y despliegue continuo <strong>(CI/CD)</strong> que permite crear flujos de construcción, test y despliegue en GitHub. Estos flujos de trabajo permiten crear y probar cada solicitud de cambios en tu repositorio o desplegar solicitudes de cambios fusionadas a producción.</p>
 </div>
@@ -796,34 +658,27 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 </li>
 </ul>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_creación_del_repositorio">Creación del repositorio</h3>
-<div class="paragraph">
-<p>Para empezar a trabajar con GitHub Actions solo necesitas un repositorio alojado en GitHub.</p>
-</div>
-<div class="paragraph">
-<p>Para ello seguimos los siguientes pasos:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Al lado de nuestro avatar de usuario, pulsamos en <code>+ &gt; New Repository</code></p>
 <div class="imageblock text-center thumb">
 <div class="content">
-<img src="modules/first-steps/images/github-new-repository.png" alt="github new repository">
+<img src="modules/first-steps/images/github-actions-overview.png" alt="github actions overview">
 </div>
 </div>
-</li>
+<div class="paragraph">
+<p>Además:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p>Creamos un repositorio llamado <code>hello-action</code> de tipo <strong>público</strong>.</p>
-<div class="imageblock text-center thumb">
-<div class="content">
-<img src="modules/first-steps/images/github-create-repository.png" alt="github create repository">
-</div>
-</div>
+<p>Podrás realizar la construcción y prueba de tus proyectos en los runners para cada <strong>sistema operativo</strong> principal. Ejecuta directamente en una <strong>máquina virtual</strong> o dentro de un <strong>contenedor</strong>.</p>
 </li>
-</ol>
+</ul>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Usa una <strong>matriz de flujos de trabajo</strong> para probar simultáneamente en varios sistemas operativos y versiones de tu entorno de ejecución.</p>
+</li>
+</ul>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -833,15 +688,93 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Las <strong>GitHub Actions</strong> funcionan tanto con repositorios <strong>públicos</strong> como <strong>privados</strong>. Sin embargo, otras funciones como las <strong>GitHub Pages</strong> solo funcionan con los repositorios <strong>públicos</strong>.</p>
+<p>Consulta la documentación oficial de GitHub Actions para más información, pueden empezar <a href="https://docs.github.com/es/actions/get-started/understand-github-actions">aquí</a>.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_creando_tu_primer_workflow">Creando tu primer workflow</h3>
+</div>
+<div class="sect1">
+<h2 id="_componentes_de_github_actions">2. Componentes de GitHub Actions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Un <strong>flujo de trabajo</strong> (<strong>workflow</strong>) de GitHub Actions es un proceso automatizado configurable que ejecutará uno o más <strong>trabajos</strong> (jobs) cuando se produzca un <strong>evento</strong> específico en el repositorio. Un flujo de trabajo se define en un archivo YAML dentro del directorio <code>.github/workflows</code> de tu repositorio.</p>
+</div>
+<div class="paragraph">
+<p>Un <strong>evento</strong> es una actividad específica en un repositorio que desencadena una ejecución de flujo de trabajo. El archivo YAML describe el evento que desencadena el flujo de trabajo, los trabajos que se ejecutarán y los pasos que cada trabajo realizará.</p>
+</div>
+<div class="paragraph">
+<p>El flujo de trabajo contiene uno o varios trabajos (<strong>jobs</strong>) que se pueden ejecutar en orden secuencial o en paralelo.</p>
+</div>
+<div class="paragraph">
+<p>Cada <strong>trabajo</strong> se ejecutará dentro de su propio <strong>ejecutor</strong> de máquina virtual o dentro de un contenedor, y tendrá uno o varios <strong>pasos</strong> que pueden ejecutar un script que defina, o bien una <strong>acción</strong>, que es una extensión reutilizable que puede simplificar el flujo de trabajo.</p>
+</div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/gh-actions-componentes.png" alt="gh actions componentes">
+</div>
+</div>
+<div class="paragraph">
+<p>Algunos de los pasos mas comunes en un flujo de trabajo son:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Checkout</strong>: Obtener el código del repositorio.</p>
+</li>
+<li>
+<p><strong>Setup</strong>: Configurar el entorno de ejecución, por ejemplo, instalando una versión específica de Java.</p>
+</li>
+<li>
+<p><strong>Build</strong>: Construir el proyecto, por ejemplo, ejecutando un comando de Maven.</p>
+</li>
+<li>
+<p><strong>Test</strong>: Ejecutar los tests del proyecto.</p>
+</li>
+<li>
+<p><strong>Deploy</strong>: Desplegar la aplicación a un entorno de producción o staging.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Los <strong>pasos</strong> pueden ser definidos por el usuario (<code>run</code>) o reutilizar acciones creadas por la comunidad (<code>uses</code>).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Definidos por el usuario</strong>: Puedes ejecutar comandos específicos en cada paso. Se realizan usando la clave <code>run</code> en el archivo YAML del flujo de trabajo.</p>
+</li>
+<li>
+<p><strong>Reutilizar acciones</strong>: Puedes usar acciones predefinidas creadas por GitHub o por la comunidad. Estas acciones se pueden encontrar en el <strong>Marketplace de GitHub Actions</strong> y se pueden incorporar a tu flujo de trabajo usando la clave <code>uses</code> en el archivo YAML.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Algunos ejemplos de <strong>acciones populares</strong> son:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>actions/checkout</code> para obtener el código del repositorio,</p>
+</li>
+<li>
+<p><code>actions/setup-java</code> para configurar el entorno de Java</p>
+</li>
+<li>
+<p><code>mikepenz/action-junit-report</code> para publicar informes de tests de JUnit.</p>
+</li>
+<li>
+<p>etc.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creando_tu_primer_workflow">3. Creando tu primer workflow</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A continuación, vamos a añadir un workflow que muestra las características esenciales de GitHub Actions.</p>
 </div>
@@ -866,6 +799,8 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 <div class="content">
 <pre class="rouge highlight"><code data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s">GitHub Actions Demo</span> <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="na">on</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">push</span><span class="pi">]</span> <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="na">env</span><span class="pi">:</span>
+  <span class="na">FORCE_JAVASCRIPT_ACTIONS_TO_NODE24</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
 <span class="na">jobs</span><span class="pi">:</span>
   <span class="na">Explore-GitHub-Actions</span><span class="pi">:</span> <i class="conum" data-value="3"></i><b>(3)</b>
     <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span> <i class="conum" data-value="4"></i><b>(4)</b>
@@ -874,7 +809,7 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
       <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"</span>
       <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."</span>
       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Check out repository code</span> <i class="conum" data-value="6"></i><b>(6)</b>
-        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span> <i class="conum" data-value="7"></i><b>(7)</b>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v6</span> <i class="conum" data-value="7"></i><b>(7)</b>
       <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "💡 The ${{ github.repository }} repository has been cloned to the runner."</span>
       <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "🖥️ The workflow is now ready to test your code on the runner."</span>
       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">List files in the repository</span>
@@ -895,7 +830,7 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Nombre del trabajo.</td>
+<td>Nombre del primer trabajo (job) del workflow.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
@@ -927,14 +862,27 @@ git push origin main</code></pre>
 </li>
 </ol>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_comprobando_el_resultado">Comprobando el resultado</h3>
 <div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Debes respetar estrictamente los espacios y saltos de línea del contenido YAML para evitar errores de sintaxis.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_comprobando_el_resultado">3.1. Comprobando el resultado</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -992,1013 +940,255 @@ git push origin main</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_primer_ejemplo_documentación_en_antora">Primer ejemplo: Documentación en Antora</h2>
+<h2 id="_action_javamaven_build">4. Action Java/Maven build</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_introducción_a_antora">Introducción a Antora</h3>
 <div class="paragraph">
-<p>Antora permite gestionar la documentación de un proyecto como si fuera código. Esto significa que el proceso de documentación se beneficia de las mismas prácticas utilizadas para producir software con éxito.</p>
-</div>
-<div class="paragraph">
-<p>Algunas de estas prácticas son:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Almacenar el contenido en un sistema de control de versiones.</p>
-</li>
-<li>
-<p>Separar el contenido, la configuración y la presentación.</p>
-</li>
-<li>
-<p>Aprovechar la automatización para la compilación, validación, verificación y publicación.</p>
-</li>
-<li>
-<p>Reutilización de materiales compartidos (DRY).</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Antora ayuda a incorporar estas prácticas en el flujo de trabajo de documentación. Como resultado, la documentación es mucho más fácil de gestionar, mantener y mejorar.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_creación_del_repositorio_2">Creación del repositorio</h3>
-<div class="paragraph">
-<p>Para empezar a trabajar solo necesitas un repositorio alojado en GitHub de tipo <strong>público</strong>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Las <strong>GitHub Actions</strong> funcionan tanto con repositorios <strong>públicos</strong> como <strong>privados</strong>. Sin embargo, otras funciones como las <strong>GitHub Pages</strong> solo funcionan con los repositorios <strong>públicos</strong>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>En este repositorio subiremos el contenido de <a href="https://github.com/ualcnsa/cicd/archive/232cf038086dc798e51d5201bba9945277562851.zip">un proyecto de documentación en Antora</a>.</p>
+<p>A continuación, vamos a añadir un workflow que muestra las construccion de un proyecto Java basado en Maven con GitHub Actions.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Descomprimimos el archivo en un directorio</p>
+<p>En el directorio <code>.github/workflows</code> crea un fichero llamado <code>maven-build.yml</code>.</p>
 </li>
 <li>
-<p>Entramos al directorio y hacemos <code>git init</code></p>
-</li>
-<li>
-<p>Creamos la rama principal <code>git checkout -b main</code></p>
-</li>
-<li>
-<p>Hacemos commit de todos los archivos con <code>git add -A &amp;&amp; git commit</code></p>
-</li>
-<li>
-<p>Añadimos el remote de nuestro repositorio <code>git remote add origin &lt;dirección-repositorio&gt;</code></p>
-</li>
-<li>
-<p>Subimos la rama local <code>git push origin main`</code></p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Nuestro repositorio tiene que tener la siguiente estructura:</p>
-</div>
-<div class="imageblock text-center thumb">
-<div class="content">
-<img src="modules/first-steps/images/github-antora-files.png" alt="github antora files">
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_creando_el_workflow_para_antora">Creando el workflow para Antora</h3>
-<div class="paragraph">
-<p>A continuación, vamos a añadir un workflow que construya nuestro proyecto en Antora.</p>
-</div>
-<div class="paragraph">
-<p>Al tratarse de un proyecto basado en NodeJS, utilizaremos una imagen Docker con éste instalado y seguiremos un proceso de construcción común a éste tipo de proyectos.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Para más información sobre la construcción de proyectos Antora <a href="https://docs.antora.org/antora/latest/install-and-run-quickstart/" class="bare">https://docs.antora.org/antora/latest/install-and-run-quickstart/</a></p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Crea un directorio <code>.github/workflows</code>.</p>
-</li>
-<li>
-<p>En este directorio, crea un fichero llamado <code>build.yml</code>.</p>
-</li>
-<li>
-<p>Copia el siguiente contenido YAML en el fichero anterior.</p>
+<p>Copia el siguiente contenido YAML:</p>
 <div class="listingblock">
-<div class="title">build.yml</div>
+<div class="title">maven-build.yml</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s">CI</span>
-
-<span class="na">on</span><span class="pi">:</span> <i class="conum" data-value="1"></i><b>(1)</b>
-  <span class="na">push</span><span class="pi">:</span>
-    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>
-  <span class="na">pull_request</span><span class="pi">:</span>
-    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">main</span> <span class="pi">]</span>
-  <span class="na">workflow_dispatch</span><span class="pi">:</span> <i class="conum" data-value="2"></i><b>(2)</b>
-
+<pre class="rouge highlight"><code data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s">Maven Build</span>
+<span class="na">on</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">push</span><span class="pi">]</span>
+<span class="na">env</span><span class="pi">:</span>
+  <span class="na">FORCE_JAVASCRIPT_ACTIONS_TO_NODE24</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
 <span class="na">jobs</span><span class="pi">:</span>
-  <span class="na">build</span><span class="pi">:</span>
-    <span class="c1"># The type of runner that the job will run on</span>
+  <span class="na">build</span><span class="pi">:</span> <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
-    <span class="na">container</span><span class="pi">:</span> <span class="s">node:16-alpine</span> <i class="conum" data-value="3"></i><b>(3)</b>
     <span class="na">steps</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
-
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install dependencies</span> <i class="conum" data-value="4"></i><b>(4)</b>
-        <span class="na">run</span><span class="pi">:</span> <span class="s">npm install</span>
-
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build Antora project</span> <i class="conum" data-value="5"></i><b>(5)</b>
-        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
-          <span class="s">cp -R node_modules/@antora/lunr-extension/supplemental_ui/* supplemental-ui/ </span><i class="conum" data-value="6"></i><b>(6)</b>
-          <span class="s">npx antora local-antora-playbook.yml --fetch </span><i class="conum" data-value="7"></i><b>(7)</b></code></pre>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Check out repository code</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v6</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Set up JDK 21</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-java@v5</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">java-version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">21'</span>
+          <span class="na">distribution</span><span class="pi">:</span> <span class="s1">'</span><span class="s">temurin'</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build with Maven</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">mvn -B package --file pom.xml</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Publish JUnit Test Report</span> <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="na">if</span><span class="pi">:</span> <span class="s">always()</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">mikepenz/action-junit-report@v6</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">report_paths</span><span class="pi">:</span> <span class="s">target/surefire-reports/TEST-*.xml</span>
+          <span class="na">detailed_summary</span><span class="pi">:</span> <span class="kc">true</span>
+          <span class="na">include_passed</span><span class="pi">:</span> <span class="kc">true</span>
+          <span class="na">check_title_template</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{SUITE_NAME}}/{{TEST_NAME}}"</span></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Se ejecuta al hacer <strong>push</strong> en la rama <strong>main</strong> o un <strong>pull request</strong> con destino <strong>main</strong>.</td>
+<td>Nombre del trabajo (job) que se encarga de construir el proyecto con Maven.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Podemos lanzar el workflow cuando queramos.</td>
+<td>Paso para configurar el JDK 21 en el runner.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Utilizamos una imagen Docker con NodeJS 16 instalado.</td>
+<td>Paso para ejecutar el comando de construcción de Maven.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Instalamos las dependencias del proyecto NodeJS.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Construimos el proyecto Antora.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Paso extra necesario al utilizar la extensión <a href="https://gitlab.com/antora/antora-lunr-extension#user-content-enable-the-search-interface">@antora/lunr-extension</a></td>
-</tr>
-<tr>
-<td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Comando para construir la documentación Antora a partir del playbook.</td>
+<td>Paso para publicar el informe de tests de JUnit. Este paso se ejecuta siempre, incluso si el paso anterior falla, gracias a la condición <code>if: always()</code>.</td>
 </tr>
 </table>
 </div>
 </li>
-<li>
-<p>Hacemos <code>commit</code> de los cambios y hacemos <code>push</code> a la rama remota</p>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code>git add -A &amp;&amp; git commit
-git push origin main</code></pre>
-</div>
-</div>
-</li>
 </ol>
-</div>
-<div class="paragraph">
-<p>Podemos comprobar que todo se ha realizado correctamente, viendo el resultado de la acción.</p>
-</div>
-<div class="imageblock text-center thumb">
-<div class="content">
-<img src="modules/first-steps/images/github-antora-build.png" alt="github antora build">
-</div>
-</div>
 </div>
 <div class="sect2">
-<h3 id="_descarga_de_los_artefactos_artifacts">Descarga de los artefactos (artifacts)</h3>
+<h3 id="_resultado_del_build">4.1. Resultado del build</h3>
 <div class="paragraph">
-<p>Hemos conseguido configurar un workflow que permite compilar la documentación en Antora cada vez que se hace un pull request, un push a main o de forma manual.</p>
-</div>
-<div class="paragraph">
-<p>Sin embargo, no tenemos acceso a la página web que se construye.</p>
-</div>
-<div class="paragraph">
-<p>Si queremos asociar la documentación a cada ejecución tenemos que hacer uso de un action que suba artefactos (artifacts).</p>
+<p>Después de hacer <code>push</code> a la rama remota, el workflow se ejecutará automáticamente.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Vamos al <a href="https://github.com/marketplace?type=actions">GitHub Actions Marketplace</a></p>
-</li>
-<li>
-<p>Buscamos la palabra <code>artifact</code>.</p>
+<p>Para comprobar el resultado, seguimos los mismos pasos que en el apartado anterior para acceder al resumen de la ejecución del workflow. El resumen muestra además un informe detallado de los tests ejecutados, gracias al paso de publicación del informe de JUnit que añadimos en el workflow.</p>
 <div class="imageblock text-center thumb">
 <div class="content">
-<img src="modules/first-steps/images/github-marketplace-artifact.png" alt="github marketplace artifact">
+<img src="modules/first-steps/images/maven-build-summary.png" alt="maven build summary">
 </div>
 </div>
 </li>
 <li>
-<p>Seleccionamos <code>Upload a Build Artifact</code> que es un action creado por GitHub.</p>
+<p>Pulsamos en el nombre del trabajo (<code>build</code> en la imagen anterior) y vemos una descripción de cada una de los pasos o steps del trabajo.</p>
 <div class="imageblock text-center thumb">
 <div class="content">
-<img src="modules/first-steps/images/github-marketplace-artifact-desc.png" alt="github marketplace artifact desc">
+<img src="modules/first-steps/images/maven-build-job-summary.png" alt="maven build job summary">
 </div>
 </div>
 </li>
 <li>
-<p>Buscamos como utilizar la action en su documentación.</p>
+<p>Además podemos ver el log de ejecución de cada uno de los pasos. En la construcción con Maven, por ejemplo, podemos ver el resultado de los tests ejecutados (usando el filtro <code>TESTS</code> en la imagen siguiente).</p>
 <div class="imageblock text-center thumb">
 <div class="content">
-<img src="modules/first-steps/images/github-marketplace-artifact-doc.png" alt="github marketplace artifact doc">
+<img src="modules/first-steps/images/maven-build-job-step.png" alt="maven build job step">
 </div>
-</div>
-</li>
-<li>
-<p>Modificamos nuestro flujo <code>build.yml`</code> con un paso extra.</p>
-<div class="listingblock">
-<div class="title">build.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"><span class="nn">...</span>
-      <span class="c1"># Uploads the generated site</span>
-       <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/upload-artifact@v3</span>
-         <span class="na">with</span><span class="pi">:</span>
-           <span class="na">name</span><span class="pi">:</span> <span class="s">docs</span> <i class="conum" data-value="1"></i><b>(1)</b>
-           <span class="na">path</span><span class="pi">:</span> <span class="s">docs/</span> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Nombre del fichero zip que descargaremos.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Carpeta con la documentación. Por defecto Antora usa el directorio <code>docs</code></td>
-</tr>
-</table>
 </div>
 </li>
 </ol>
-</div>
-<div class="paragraph">
-<p>Tras hacer un push o una pull request, se ejecutará el workflow y podemos descargar la documentación en el zip del final de la página.</p>
-</div>
-<div class="imageblock text-center thumb">
-<div class="content">
-<img src="modules/first-steps/images/github-antora-artifact.png" alt="github antora artifact">
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_despliegue_en_github_pages">Despliegue en GitHub Pages</h3>
-<div class="paragraph">
-<p>Es un servicio de GitHub que ermite publicar páginas en HTML estático o en Jekyll.</p>
-</div>
-<div class="paragraph">
-<p>Además proporciona un dominio y url públicas:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://organización.github.io" class="bare">https://organización.github.io</a></p>
-</li>
-<li>
-<p><a href="https://organización.github.io/repositorio" class="bare">https://organización.github.io/repositorio</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Podemos desplegar un sitio web mediante un directorio en el repositorio o con una rama especial (gh-pages).</p>
-</div>
-<div class="paragraph">
-<p>Este servicio es usado normalmente para despliegue de frontends o portales de documentación de repositorios, como el caso que nos ocupa.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Vamos a utilizar el action <a href="https://github.com/marketplace/actions/deploy-to-github-pages"><code>Deploy to GitHub Pages</code></a>.</p>
-<div class="imageblock text-center thumb">
-<div class="content">
-<img src="modules/first-steps/images/github-marketplace-pages.png" alt="github marketplace pages">
-</div>
-</div>
-</li>
-<li>
-<p>Leemos la documentación.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Si utilizamos un contenedor tenemos que tener instalado <code>git</code> y <code>rsync</code> para usar esta action.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install rsync and git</span>
-  <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
-    <span class="s">apt-get update &amp;&amp; apt-get install -y rsync git</span>
-    <span class="s"># apk update &amp;&amp; apk add rsync git</span>
-<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Deploy</span>
-  <span class="na">uses</span><span class="pi">:</span> <span class="s">JamesIves/github-pages-deploy-action@v4.2.5</span></code></pre>
-</div>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Modificamos los pasos de nuestro flujo <code>build.yml</code> como primer y último paso</p>
-<div class="listingblock">
-<div class="title">build.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml">    <span class="na">steps</span><span class="pi">:</span>
-       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install git and rsync 📚</span>
-         <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
-           <span class="s">apk update &amp;&amp; apk add git rsync</span>
-
-<span class="s">...</span>
-
-      <span class="s">- name</span><span class="pi">:</span> <span class="s">Deploy 🚀</span>
-         <span class="s">uses</span><span class="pi">:</span> <span class="s">JamesIves/github-pages-deploy-action@v4.2.5</span>
-         <span class="s">if</span><span class="pi">:</span> <span class="s">contains(github.ref,'refs/heads/main')</span> <i class="conum" data-value="1"></i><b>(1)</b>
-         <span class="s">with</span><span class="pi">:</span>
-           <span class="na">branch</span><span class="pi">:</span> <span class="s">gh-pages</span> <i class="conum" data-value="2"></i><b>(2)</b>
-           <span class="na">folder</span><span class="pi">:</span> <span class="s">docs</span> <i class="conum" data-value="3"></i><b>(3)</b>
-           <span class="na">clean</span><span class="pi">:</span> <span class="no">true</span> <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Solo se ejecuta si hacemos push a la rama main. Evitamos modificar la rama <code>gh-pages</code> al construir una pull request.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>La rama donde vamos a desplegar.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>La carpeta que queremos desplegar.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Si queremos limpiar la rama para evitar que ficheros no existentes se queden en la rama.</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Hacemos commit y subimos los cambios.</p>
-</li>
-<li>
-<p>Una vez se ha ejecutado la acción, configuramos el soporte para <strong>GitHub Pages</strong>. Entramos en <code>Settings &gt; Pages</code> y seleccionamos la rama <code>gh-pages</code> como origen.</p>
-<div class="imageblock text-center thumb">
-<div class="content">
-<img src="modules/first-steps/images/github-pages.png" alt="github pages">
-</div>
-</div>
-</li>
-<li>
-<p>En esta página podemos consultar la <code>url</code> de la documentación desplegada.</p>
-</li>
-</ol>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p><strong>EJERCICIOS (Optativos)</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Añade un nuevo paso que permita crear un release a partir de la creación de un tag. Puedes basarte en el siguiente <a href="https://github.com/frangarcj/ff3_vita/blob/master/.github/workflows/compilation.yml#L38">ejemplo</a>.</p>
-</li>
-</ol>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-<h1 id="_aplicación_en_nodejs" class="sect0">Aplicación en NodeJS</h1>
-<div class="openblock partintro">
-<div class="content">
-<div class="exampleblock">
-<div class="title">Objetivos</div>
-<div class="content">
-<div class="paragraph">
-<p>Como construir y desplegar apliaciones web NodeJS con GitHub Actions</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Definir un flujo de trabajo para automatizar las etapas más habituales en CI/CD</p>
-</li>
-<li>
-<p>Desplegar la aplicación NodeJS tanto de forma nativa como mediante contenedor</p>
-</li>
-</ol>
-</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_hola_mundo_en_nodejs"><em>Hola mundo</em> en NodeJS</h2>
+<h2 id="_estado_de_la_construcción">5. Estado de la construcción</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A continuación se muestra un ejemplo de <strong>integración y despliegue continuos en GitHub Actions de un proyecto NodeJS</strong>. Los pasos a realizar son similares a los ejemplos anterior con Jenkins pero adaptaremos las ordenes o comandos a la forma de trabajar de GitHub Actions.</p>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="paragraph">
-<p>La implementación de la integración y despliegue continuo permitirá que, para cada pull request en el repositorio, GitHub Actions instale las dependencias y ejecute los tests. Si los tests pasan correctamente, GitHub Actions desplegará la aplicación en el servidor de despliegue. Y si fallan, se notificará al desarrollador.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_creación_del_repositorio_3">Creación del repositorio</h3>
-<div class="paragraph">
-<p>Para empezar a trabajar solo necesitas un repositorio alojado en GitHub de tipo <strong>público</strong>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Las <strong>GitHub Actions</strong> funcionan tanto con repositorios <strong>públicos</strong> como <strong>privados</strong>. Sin embargo, otras funciones como las <strong>GitHub Pages</strong> solo funcionan con los repositorios <strong>públicos</strong>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>En este repositorio subiremos el contenido de <a href="https://github.com/ualcnsa/nodeapp/archive/b96d862ac1b7e2c159c29c2a8552355b01f5cc17.zip">un proyecto HelloWorld en NodeJS</a>.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Descomprimimos el archivo en un directorio</p>
-</li>
-<li>
-<p>Entramos al directorio y hacemos <code>git init</code></p>
-</li>
-<li>
-<p>Creamos la rama principal <code>git checkout -b main</code></p>
-</li>
-<li>
-<p>Hacemos commit de todos los archivos con <code>git add -A &amp;&amp; git commit</code></p>
-</li>
-<li>
-<p>Añadimos el remote de nuestro repositorio <code>git remote add origin &lt;dirección-repositorio&gt;</code></p>
-</li>
-<li>
-<p>Subimos la rama local <code>git push origin main`</code></p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Nuestro repositorio tiene que tener la siguiente estructura:</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Comprueba que los archivos <code>main.js</code>, <code>app.js</code> y  <code>app.test.js</code>, así como la carpeta <code>services</code>, estén dentro de una carpeta <code>src</code>. Si no es así, crea la carpeta <code>src</code> y muevelos dentro.</p>
+<p>Tras la ejecución del workflow, el estado de la construcción se muestra en la página principal del repositorio, junto al nombre de cada commit. El estado puede ser <code>success</code>, <code>failure</code> o <code>pending</code> dependiendo del resultado de la ejecución</p>
 </div>
 <div class="imageblock text-center thumb">
 <div class="content">
-<img src="modules/node-app/images/node-files-initial-point.png" alt="node files initial point">
+<img src="modules/first-steps/images/actions-status.png" alt="actions status">
 </div>
-<div class="title">Fig. 1. Archivos y carpetas en el estado inicial</div>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_creación_del_workflow_en_github_actions">Creación del workflow en GitHub Actions</h3>
-<div class="paragraph">
-<p>Creamos un nuevo workflow <code>.github/workflows/build.yml</code></p>
-</div>
-<div class="listingblock">
-<div class="title">.github/workflows/build.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"> <span class="na">name</span><span class="pi">:</span> <span class="s">CI</span>
-
- <span class="na">on</span><span class="pi">:</span>
-   <span class="na">push</span><span class="pi">:</span>
-     <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">master</span> <span class="pi">]</span> <i class="conum" data-value="1"></i><b>(1)</b>
-   <span class="na">pull_request</span><span class="pi">:</span>
-     <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">master</span> <span class="pi">]</span>
-   <span class="na">workflow_dispatch</span><span class="pi">:</span>
-
- <span class="na">jobs</span><span class="pi">:</span>
-   <span class="na">build</span><span class="pi">:</span>
-     <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
-     <span class="na">container</span><span class="pi">:</span> <span class="s">node:16-alpine</span>
-
-     <span class="na">steps</span><span class="pi">:</span>
-       <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
-
-       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install dependencies</span>
-         <span class="na">run</span><span class="pi">:</span> <span class="s">npm install</span>
-
-       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Test</span>
-         <span class="na">run</span><span class="pi">:</span> <span class="s">npm run test-jenkins</span> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>El nombre de la rama <code>master</code> o <code>main</code> depende de cual es la rama principal.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Ejecuta los tests de igual forma a como los definimos para Jenkins.</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
-<p>El resultado sera:</p>
+<p>Además, es habitual generar un <strong>badge de estado de la construcción</strong> para incorporarlo en el <code>README.md</code> del repositorio. Para ello, accede a la página de <code>Actions</code> y pulsa en el botón <code>Create status badge</code> que aparece en la parte derecha de la pantalla.</p>
 </div>
 <div class="imageblock text-center thumb">
 <div class="content">
-<img src="modules/node-app/images/github-action-nodejs-test.png" alt="github action nodejs test">
+<img src="modules/first-steps/images/create-status-badge.png" alt="create status badge">
 </div>
-<div class="title">Fig. 2. Nodeapp action</div>
 </div>
 <div class="paragraph">
-<p>Sin embargo nos interesaría verlo de una forma más visual e integrado en el entorno de GitHub utilizando el action <a href="https://github.com/dorny/test-reporter">Test Reporter</a>. Esta acción permite anotar las pull requests con un test en formato junit.</p>
-</div>
-<div class="paragraph">
-<p>Editamos <code>.github/workflows/build.yml</code> y añadimos la acción para subir un artefacto con los resultados de los tests.</p>
-</div>
-<div class="listingblock">
-<div class="title">.github/workflows/build.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"><span class="nn">...</span>
-      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/upload-artifact@v2</span>
-         <span class="s">if</span><span class="pi">:</span> <span class="s">success() || failure()</span> <i class="conum" data-value="1"></i><b>(1)</b>
-         <span class="s">with</span><span class="pi">:</span>
-           <span class="na">name</span><span class="pi">:</span> <span class="s">test-results</span> <i class="conum" data-value="2"></i><b>(2)</b>
-           <span class="na">path</span><span class="pi">:</span> <span class="s">./coverage/test.results.xml</span> <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Ejecutamos el paso independiente de los fallos.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Nombre del artefacto.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Ruta del resultado de los tests.</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Además añadimos otro flujo que anote la pull request llamado <code>.github/workflows/tests.yml</code></p>
-</div>
-<div class="listingblock">
-<div class="title">.github/workflows/tests.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Test</span><span class="nv"> </span><span class="s">Report'</span>
- <span class="na">on</span><span class="pi">:</span>
-   <span class="na">workflow_run</span><span class="pi">:</span>
-     <span class="na">workflows</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">CI'</span><span class="pi">]</span> <i class="conum" data-value="1"></i><b>(1)</b>
-     <span class="na">types</span><span class="pi">:</span>
-       <span class="pi">-</span> <span class="s">completed</span>
- <span class="na">jobs</span><span class="pi">:</span>
-   <span class="na">report</span><span class="pi">:</span>
-     <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span> <i class="conum" data-value="2"></i><b>(2)</b>
-     <span class="na">steps</span><span class="pi">:</span>
-     <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">dorny/test-reporter@v1</span>
-       <span class="na">with</span><span class="pi">:</span>
-         <span class="na">artifact</span><span class="pi">:</span> <span class="s">test-results</span>              <i class="conum" data-value="3"></i><b>(3)</b>
-         <span class="na">name</span><span class="pi">:</span> <span class="s">JEST Tests</span>                    <i class="conum" data-value="4"></i><b>(4)</b>
-         <span class="na">path</span><span class="pi">:</span> <span class="s1">'</span><span class="s">test.results.xml'</span>            <i class="conum" data-value="5"></i><b>(5)</b>
-         <span class="na">reporter</span><span class="pi">:</span> <span class="s">jest-junit</span>                <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Se ejecuta cuando se completa el flujo llamado <code>CI</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>No hace falta contenedor.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Nombre del artefacto con los tests.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Nombre del check.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Nombre de los resultados dentro del zip.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Formato de los resultados.</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Subimos los cambios y podemos comprobar el resultado en los <code>Checks</code>.</p>
+<p>Esto generará un código Markdown que puedes incluir en el <code>README.md</code> de tu repositorio para mostrar el estado del workflow.</p>
 </div>
 <div class="imageblock text-center thumb">
 <div class="content">
-<img src="modules/node-app/images/github-action-check-jest.png" alt="github action check jest">
+<img src="modules/first-steps/images/create-status-badge-copy-md.png" alt="create status badge copy md">
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_informe_de_cobertura">Informe de cobertura</h3>
-<div class="paragraph">
-<p>Como ya sabemos, la cobertura de código nos va a ofrecer un valor directamente relacionado con la calidad de los juegos de prueba. Para obtener la cobertura y publicarla en GitHub Actions, debemos hacer:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Utilizar un action que se encarge de la publicación de la cobertura como <a href="https://github.com/mattallty/jest-github-action">Jest Github Action</a>.</p>
-</li>
-<li>
-<p>Modificar el paso <em>Test</em> del flujo de GitHub Actions para que llame al script de cobertura y publique el informe de cobertura generado.</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Modifica <code>.github/workflows/build.yml</code>, cambiando el paso <code>Test</code> por la ejecución del action.</p>
-</li>
-<li>
-<p>Además pública todos los tests como artifact.</p>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="title">.github/workflows/build.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml">   <span class="s">...</span>
-      <span class="s">- name</span><span class="pi">:</span> <span class="s">Test</span>
-        <span class="s">uses</span><span class="pi">:</span> <span class="s">mattallty/jest-github-action@v1</span>
-        <span class="s">env</span><span class="pi">:</span>
-          <span class="na">GITHUB_TOKEN</span><span class="pi">:</span> <span class="s">${{ secrets.GITHUB_TOKEN }}</span>
-        <span class="na">with</span><span class="pi">:</span>
-          <span class="na">test-command</span><span class="pi">:</span> <span class="s2">"</span><span class="s">npm</span><span class="nv"> </span><span class="s">run</span><span class="nv"> </span><span class="s">coverage-jenkins"</span> <i class="conum" data-value="1"></i><b>(1)</b>
-   <span class="s">...</span>
-      <span class="s">- uses</span><span class="pi">:</span> <span class="s">actions/upload-artifact@v2</span>
-        <span class="s">if</span><span class="pi">:</span> <span class="s">success() || failure()</span>
-        <span class="s">with</span><span class="pi">:</span>
-          <span class="na">name</span><span class="pi">:</span> <span class="s">test-results</span>
-          <span class="na">path</span><span class="pi">:</span> <span class="s">./coverage/test.results.xml</span>
-          <span class="na">path</span><span class="pi">:</span> <span class="pi">|</span>
-            <span class="s">./coverage/ </span><i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Genera los tests de cobertura.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Subimos la carpeta completa.</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
-<p>Podemos probar realizando un pull request de prueba.</p>
+<p>Pegando este código en el <code>README.md</code> y haciendo <code>push</code> a la rama remota, el badge de estado de la construcción aparecerá en la página principal del repositorio.</p>
 </div>
 <div class="imageblock text-center thumb">
 <div class="content">
-<img src="modules/node-app/images/github-action-coberture.png" alt="github action coberture">
-</div>
-<div class="title">Fig. 3. Ejecución de cobertura</div>
+<img src="modules/first-steps/images/create-status-badge-readme.png" alt="create status badge readme">
 </div>
 </div>
-<div class="sect2">
-<h3 id="_análisis_estático_de_código">Análisis estático de código</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusión">Conclusión</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>El código JavaScript es dinámicamente tipado, por lo que en lugar de usar el compilador para realizar el análisis estático de código, como ocurre en lenguajes como Java, las formas más comunes de <a href="https://medium.com/codecademy-engineering/static-analysis-in-javascript-a-technical-introduction-859de5d444a6">análisis estático en JavaScript</a> son <em>formatters</em> y <em>linters</em>.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><em>Formatters</em> o formateadores, escanean y reformatean rápidamente los archivos de código. Uno de los más populares es <a href="https://prettier.io/">Prettier</a>, que como cualquier buen formateador, corregirá automaticamente las inconsistencias que encuentre.</p>
-</li>
-<li>
-<p><em>Linters</em> pueden trabajar en aspectos de formato pero también otros problemas más complejos. Se basan en una serie de reglas para escanear el código, o descripciones de comportamientos a vigilar, y muestran todas las violaciones que encuentran. El más popular para JavaScript es <a href="https://eslint.org/">ESLint</a>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Vamos a probar <strong>ESLint con Prettier</strong> en GitHub Actions con la action <a href="https://github.com/ataylorme/eslint-annotate-action">ESLint Annotate from Report JSON</a>. Para utilizarla, vamos a añadir al <code>package.json</code> un script para <code>lint</code> en formato json</p>
-</div>
-<div class="listingblock">
-<div class="title">package.json: lint y dependencia a ESLint</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="json"><span class="w">   </span><span class="err">...</span><span class="w">
-   </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="err">...</span><span class="w">
-      </span><span class="nl">"lint:json"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eslint src/**/*.js --format json -o coverage/eslint-result.json"</span><span class="w">
-   </span><span class="p">}</span><span class="err">,</span><span class="w">
-   </span><span class="err">...</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>En nuestro flujo <code>.github/workflows/build.yml</code>, añade dos nuevos pasos: uno en el que llames a <code>lint:json</code> y otro que ejecute la action para anotar el código.</p>
-</div>
-<div class="listingblock">
-<div class="title">.github/workflows/build.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"><span class="nn">...</span>
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Save Code Linting Report JSON</span>
-         <span class="s">run</span><span class="pi">:</span> <span class="s">npm run lint:json</span>
-         <span class="s">continue-on-error</span><span class="pi">:</span> <span class="no">true</span> <i class="conum" data-value="1"></i><b>(1)</b>
-
-       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Annotate Code Linting Results</span>
-         <span class="na">uses</span><span class="pi">:</span> <span class="s">ataylorme/eslint-annotate-action@1.2.0</span>
-         <span class="na">with</span><span class="pi">:</span>
-           <span class="na">repo-token</span><span class="pi">:</span> <span class="s2">"</span><span class="s">${{</span><span class="nv"> </span><span class="s">secrets.GITHUB_TOKEN</span><span class="nv"> </span><span class="s">}}"</span> <i class="conum" data-value="2"></i><b>(2)</b>
-           <span class="na">report-json</span><span class="pi">:</span> <span class="s2">"</span><span class="s">./coverage/eslint-result.json"</span> <i class="conum" data-value="3"></i><b>(3)</b>
-<span class="nn">...</span></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Continua ejecutando el flujo aunque se produzca un error.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Esta action necesita un token para poder anotar el código. Esta disponible sin realizar más acciones.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Ruta del informe de ESLint.</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Podemos probar realizando un pull request de prueba y viendo el resultado en la pestaña <code>Files Changed</code>.</p>
-</div>
-<div class="imageblock text-center thumb">
-<div class="content">
-<img src="modules/node-app/images/github-action-eslint-result.png" alt="github action eslint result">
-</div>
-<div class="title">Fig. 4. Ejecución de ESLint</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_despliegue_en_la_vm">Despliegue en la VM</h3>
-<div class="paragraph">
-<p>Para desplegar la aplicación <em>hello world</em> en la instancia de despliegue vamos a clonar el repositorio y a continuación ejecutaremos en ella la orden de Node para ponerla en marcha.</p>
-</div>
-<div class="paragraph">
-<p>Recuerda que ya he hemos realizado una configuración previa sobre la instancia de despliegue, que constituyen los  <strong>prerrequisitos</strong> para esta sección:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Con anterioridad ya instalamos NodeJS en la instancia de despliegue.</p>
-</li>
-<li>
-<p>Tenemos creado un par de claves y hemos copiado la clave pública de despliegue al <code>authorized_keys</code> para que GitHub pueda ejecutar comandos sobre ella usando la clave privada.</p>
-</li>
-<li>
-<p>Como requisito adicional, para ayudarnos a lanzar <code>npm start</code> desde GitHub Actions, como un proceso demonio en background, usaremos <a href="https://www.npmjs.com/package/forever"><strong>forever</strong></a>. Debes instalar <code>forever</code> en la  instancia de despliegue:</p>
-<div class="literalblock">
-<div class="content">
-<pre>sudo npm install forever -g</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Una vez revisados los prerrequisitos, vamos a configurar nuestro repositorio de GitHub para que pueda realizar el despliegue.</p>
-</div>
-<div class="sect3">
-<h4 id="_añadir_la_clave_privada_a_los_secretos_del_repositorio">Añadir la clave privada a los secretos del repositorio.</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ve a tu repositorio en Github y entra en <code>Settings &gt; Secrets</code>.</p>
-</li>
-<li>
-<p>Crea un nuevo secreto con <code>New Repository Secret</code>. Este secreto contiene dos cosas: un nombre y el valor. El nombre se utiliza para obtener el valor más tarde en un flujo de trabajo de Github Actions.</p>
-</li>
-<li>
-<p>Introduce como nombre <code>SSH_PRIVATE_KEY</code>.</p>
-</li>
-<li>
-<p>Copia y pega el contenido de la clave privada como el valor.</p>
-</li>
-</ol>
-</div>
-<div class="imageblock text-center thumb">
-<div class="content">
-<img src="modules/node-app/images/github-action-new-secret.png" alt="github action new secret">
-</div>
-<div class="title">Fig. 5. Nuevo secreto</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_añadir_la_clave_privada_al_flujo_de_trabajo_de_github_actions">Añadir la clave privada al flujo de trabajo de Github Actions</h4>
-<div class="paragraph">
-<p>Ahora tenemos que añadir la clave privada a la máquina o contenedor de nuestro flujo de trabajo. Para simplificar el proceso podemos usar una action como <a href="https://github.com/marketplace/actions/install-ssh-key">Install SSH Key</a>. Además, vamos a realizar el despliegue en un flujo nuevo <code>.github/workflows/deploy.yml</code> que solo se ejecute al hacer push sobre la rama principal.</p>
-</div>
-<div class="listingblock">
-<div class="title">.github/workflows/deploy.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s">Deploy</span>
-<span class="na">on</span><span class="pi">:</span>
-  <span class="na">push</span><span class="pi">:</span>
-    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">master</span> <span class="pi">]</span>
-  <span class="na">workflow_dispatch</span><span class="pi">:</span>
-
-<span class="na">jobs</span><span class="pi">:</span>
-  <span class="na">deploy</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
-    <span class="na">steps</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install SSH Key</span>
-        <span class="na">uses</span><span class="pi">:</span> <span class="s">shimataro/ssh-key-action@v2</span>
-        <span class="na">with</span><span class="pi">:</span>
-          <span class="na">key</span><span class="pi">:</span> <span class="s">${{ secrets.SSH_PRIVATE_KEY }}</span> <i class="conum" data-value="1"></i><b>(1)</b>
-          <span class="na">known_hosts</span><span class="pi">:</span> <span class="s1">'</span><span class="s">un-valor-para-que-no-de-error'</span> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Nombre del secreto con la clave privada.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Valor del known_hosts de la máquina a la que nos conectamos. Metemos un valor de ejemplo para calcularlo dinámicamente en pasos posteriores.</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_añadir_un_valor_correcto_de_known_hosts">Añadir un valor correcto de known_hosts</h4>
-<div class="paragraph">
-<p>Vamos a guardar como secreto la IP o nombre de dominio de la máquina de despliegue con el nombre de <code>SSH_HOST</code>. Con este valor, vamos a añadir un paso que obtenga el <code>known_hosts</code> y lo escriba.</p>
-</div>
-<div class="listingblock">
-<div class="title">.github/workflows/deploy.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"><span class="nn">...</span>
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Adding Known Hosts</span>
-        <span class="na">run</span><span class="pi">:</span> <span class="s">ssh-keyscan -H ${{ secrets.SSH_HOST }} &gt;&gt; ~/.ssh/known_hosts</span></code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_añadir_el_código_de_despliegue">Añadir el código de despliegue</h4>
-<div class="paragraph">
-<p>De forma similar a como lo haciamos con Jenkins, vamos a añadir un último paso que realize el despliegue mediante ssh.</p>
-</div>
-<div class="listingblock">
-<div class="title">.github/workflows/deploy.yml</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="yaml">      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Deploy</span>
-         <span class="s">run</span><span class="pi">:</span> <span class="pi">|</span>
-           <span class="s">ssh ubuntu@${{ secrets.SSH_HOST }} "if [ ! -d 'nodeapp' ]; then \</span>
-               <span class="s">git clone https://github.com/ualcnsa/nodeapp.git; \ </span><i class="conum" data-value="1"></i><b>(1)</b>
-             <span class="s">else \</span>
-               <span class="s">cd nodeapp &amp;&amp; git stash &amp;&amp; git fetch --all &amp;&amp; git reset --hard origin/master &amp;&amp; git pull origin master; \</span>
-             <span class="s">fi"</span>
-           <span class="s">ssh ubuntu@${{ secrets.SSH_HOST }} "if pgrep node; then forever stopall; fi"</span>
-           <span class="s">ssh ubuntu@${{ secrets.SSH_HOST }} "cd nodeapp &amp;&amp; npm install"</span>
-           <span class="s">ssh ubuntu@${{ secrets.SSH_HOST }} "cd nodeapp &amp;&amp; forever start src/main.js"</span></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Nombre del repositorio a desplegar.</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Podemos acceder a la aplicación mediante el puerto 3000. Si no se puede acceder, habrá que abrirlo en la consola de Google Cloud.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock text-center thumb">
-<div class="content">
-<img src="modules/node-app/images/github-action-deploy-result.png" alt="github action deploy result">
-</div>
-<div class="title">Fig. 6. Resultado del despliegue</div>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p><strong>EJERCICIOS (Optativos)</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Crea un nuevo flujo de despliegue, similar al creado en Jenkins, que utilize Docker. Puedes hacerlo de forma manual (mediante script) o busca actions que te ayuden a publicarlo en el registro de Google Cloud.</p>
-</li>
-</ol>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="paragraph">
-<p>Referencias</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://zellwk.com/blog/github-actions-deploy/">Deploying to a server via SSH and Rsync in a Github Action</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
+<p>En esta sección hemos visto cómo crear un workflow de GitHub Actions para ejecutar un trabajo de construcción con Maven. Hemos comprobado el resultado del workflow y el informe de tests generado. Además, hemos visto cómo se muestra el estado de la construcción en la página principal del repositorio y cómo generar un badge de estado para incluirlo en el <code>README.md</code> del repositorio.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-03-30 19:34:34 +0200
+Last updated 2026-03-25 22:34:08 +0100
 </div>
 </div>
+<style>
+    .doc .listingblock > .content {
+      position: relative;
+    }
+
+    .doc .listingblock code[data-lang]::before {
+      content: none;
+    }
+
+    .doc .source-toolbox {
+      display: flex;
+      position: absolute;
+      visibility: hidden;
+      top: 0.25rem;
+      right: 0.5rem;
+      color: #808080;
+      white-space: nowrap;
+      font-size: 0.85em;
+    }
+
+    .doc .listingblock:hover .source-toolbox {
+      visibility: visible;
+    }
+
+    .doc .source-toolbox .source-lang {
+      font-family: "Droid Sans Mono", "DejaVu Sans Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.075em;
+    }
+
+    .doc .source-toolbox > :not(:last-child)::after {
+      content: "|";
+      letter-spacing: 0;
+      padding: 0 1ch;
+    }
+
+    .doc .source-toolbox .copy-button {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      border: none;
+      color: inherit;
+      outline: none;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      width: 1em;
+      height: 1em;
+    }
+
+    .doc .source-toolbox .copy-icon {
+      flex: none;
+      width: inherit;
+      height: inherit;
+      filter: invert(50.2%);
+      margin-top: 0.05em;
+    }
+
+    .doc .source-toolbox .copy-toast {
+      flex: none;
+      position: relative;
+      display: inline-flex;
+      justify-content: center;
+      margin-top: 1em;
+      border-radius: 0.25em;
+      padding: 0.5em;
+      cursor: auto;
+      opacity: 0;
+      transition: opacity 0.5s ease 0.75s;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+    }
+
+    .doc .source-toolbox .copy-toast::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 1em;
+      height: 1em;
+      border: 0.55em solid transparent;
+      border-left-color: rgba(0, 0, 0, 0.8);
+      transform: rotate(-90deg) translateX(50%) translateY(50%);
+      transform-origin: left;
+    }
+
+    .doc .source-toolbox .copy-button.clicked .copy-toast {
+      opacity: 1;
+      transition: none;
+    }
+
+    .imageblock .title {
+      text-align: center;
+    }
+    </style>
+    <script src="copy-to-clipboard.js"></script>
 </body>
 </html>
