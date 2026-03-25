@@ -554,22 +554,26 @@ pre.rouge .gs {
 }
 </style>
 </head>
-<body class="book toc2 toc-right">
+<body class="book toc2 toc-right doc">
 <div id="header">
 <h1>Integración Continua (CI) con GitHub Actions</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Tabla de contenidos</div>
-<ul class="sectlevel0">
-<li><a href="#_primeros_pasos_con_github_actions">Primeros pasos con GitHub Actions</a>
 <ul class="sectlevel1">
-<li><a href="#_comenzando_con_github_actions">Comenzando con GitHub Actions</a>
+<li><a href="#_introducción_a_github_actions">1. Introducción a GitHub Actions</a></li>
+<li><a href="#_componentes_de_github_actions">2. Componentes de GitHub Actions</a></li>
+<li><a href="#_creando_tu_primer_workflow">3. Creando tu primer workflow</a>
 <ul class="sectlevel2">
-<li><a href="#_introducción_a_github_actions">Introducción a GitHub Actions</a></li>
-<li><a href="#_construcción_del_proyecto_java_en_el_repositorio">Construcción del proyecto Java en el repositorio</a></li>
+<li><a href="#_comprobando_el_resultado">3.1. Comprobando el resultado</a></li>
 </ul>
 </li>
+<li><a href="#_action_javamaven_build">4. Action Java/Maven build</a>
+<ul class="sectlevel2">
+<li><a href="#_resultado_del_build">4.1. Resultado del build</a></li>
 </ul>
 </li>
+<li><a href="#_estado_de_la_construcción">5. Estado de la construcción</a></li>
+<li><a href="#_conclusión">Conclusión</a></li>
 </ul>
 </div>
 </div>
@@ -609,31 +613,6 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 <div class="paragraph">
 <p>Esta es la versión <strong>0.26.1</strong> de este documento.</p>
 </div>
-</div>
-</div>
-<h1 id="_primeros_pasos_con_github_actions" class="sect0">Primeros pasos con GitHub Actions</h1>
-<div class="openblock partintro">
-<div class="content">
-<div class="exampleblock">
-<div class="title">Objetivos</div>
-<div class="content">
-<div class="ulist">
-<ul>
-<li>
-<p>Vamos a añadir en un repositorio nuestro primer flujo de trabajo con GitHub Actions.</p>
-</li>
-<li>
-<p>Crearemos un flujo de trabajo para construir una aplicación Java basada en Maven y ejecutaremos los tests unitarios.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_comenzando_con_github_actions">Comenzando con GitHub Actions</h2>
-<div class="sectionbody">
 <div class="exampleblock">
 <div class="title">Objetivos</div>
 <div class="content">
@@ -645,12 +624,18 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 <li>
 <p>Probar un flujo de trabajo sencillo para familiarizarse con la plataforma.</p>
 </li>
+<li>
+<p>Crear un flujo de trabajo para construir un proyecto Java con Maven.</p>
+</li>
 </ul>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_introducción_a_github_actions">Introducción a GitHub Actions</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introducción_a_github_actions">1. Introducción a GitHub Actions</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><strong>GitHub Actions</strong> es una <strong>plataforma</strong> de integración continua y despliegue continuo <strong>(CI/CD)</strong> que permite crear flujos de construcción, test y despliegue en GitHub. Estos flujos de trabajo permiten crear y probar cada solicitud de cambios en tu repositorio o desplegar solicitudes de cambios fusionadas a producción.</p>
 </div>
@@ -673,14 +658,123 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 </li>
 </ul>
 </div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/github-actions-overview.png" alt="github actions overview">
 </div>
-<div class="sect2">
-<h3 id="_construcción_del_proyecto_java_en_el_repositorio">Construcción del proyecto Java en el repositorio</h3>
+</div>
 <div class="paragraph">
-<p>Para empezar a trabajar con GitHub Actions solo necesitas Java basado en Maven e un repositorio alojado en GitHub.</p>
+<p>Además:</p>
 </div>
-<div class="sect3">
-<h4 id="_creando_tu_primer_workflow">Creando tu primer workflow</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Podrás realizar la construcción y prueba de tus proyectos en los runners para cada <strong>sistema operativo</strong> principal. Ejecuta directamente en una <strong>máquina virtual</strong> o dentro de un <strong>contenedor</strong>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Usa una <strong>matriz de flujos de trabajo</strong> para probar simultáneamente en varios sistemas operativos y versiones de tu entorno de ejecución.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Consulta la documentación oficial de GitHub Actions para más información, pueden empezar <a href="https://docs.github.com/es/actions/get-started/understand-github-actions">aquí</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_componentes_de_github_actions">2. Componentes de GitHub Actions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Un <strong>flujo de trabajo</strong> (<strong>workflow</strong>) de GitHub Actions es un proceso automatizado configurable que ejecutará uno o más <strong>trabajos</strong> (jobs) cuando se produzca un <strong>evento</strong> específico en el repositorio. Un flujo de trabajo se define en un archivo YAML dentro del directorio <code>.github/workflows</code> de tu repositorio.</p>
+</div>
+<div class="paragraph">
+<p>Un <strong>evento</strong> es una actividad específica en un repositorio que desencadena una ejecución de flujo de trabajo. El archivo YAML describe el evento que desencadena el flujo de trabajo, los trabajos que se ejecutarán y los pasos que cada trabajo realizará.</p>
+</div>
+<div class="paragraph">
+<p>El flujo de trabajo contiene uno o varios trabajos (<strong>jobs</strong>) que se pueden ejecutar en orden secuencial o en paralelo.</p>
+</div>
+<div class="paragraph">
+<p>Cada <strong>trabajo</strong> se ejecutará dentro de su propio <strong>ejecutor</strong> de máquina virtual o dentro de un contenedor, y tendrá uno o varios <strong>pasos</strong> que pueden ejecutar un script que defina, o bien una <strong>acción</strong>, que es una extensión reutilizable que puede simplificar el flujo de trabajo.</p>
+</div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/gh-actions-componentes.png" alt="gh actions componentes">
+</div>
+</div>
+<div class="paragraph">
+<p>Algunos de los pasos mas comunes en un flujo de trabajo son:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Checkout</strong>: Obtener el código del repositorio.</p>
+</li>
+<li>
+<p><strong>Setup</strong>: Configurar el entorno de ejecución, por ejemplo, instalando una versión específica de Java.</p>
+</li>
+<li>
+<p><strong>Build</strong>: Construir el proyecto, por ejemplo, ejecutando un comando de Maven.</p>
+</li>
+<li>
+<p><strong>Test</strong>: Ejecutar los tests del proyecto.</p>
+</li>
+<li>
+<p><strong>Deploy</strong>: Desplegar la aplicación a un entorno de producción o staging.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Los <strong>pasos</strong> pueden ser definidos por el usuario (<code>run</code>) o reutilizar acciones creadas por la comunidad (<code>uses</code>).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Definidos por el usuario</strong>: Puedes ejecutar comandos específicos en cada paso. Se realizan usando la clave <code>run</code> en el archivo YAML del flujo de trabajo.</p>
+</li>
+<li>
+<p><strong>Reutilizar acciones</strong>: Puedes usar acciones predefinidas creadas por GitHub o por la comunidad. Estas acciones se pueden encontrar en el <strong>Marketplace de GitHub Actions</strong> y se pueden incorporar a tu flujo de trabajo usando la clave <code>uses</code> en el archivo YAML.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Algunos ejemplos de <strong>acciones populares</strong> son:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>actions/checkout</code> para obtener el código del repositorio,</p>
+</li>
+<li>
+<p><code>actions/setup-java</code> para configurar el entorno de Java</p>
+</li>
+<li>
+<p><code>mikepenz/action-junit-report</code> para publicar informes de tests de JUnit.</p>
+</li>
+<li>
+<p>etc.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creando_tu_primer_workflow">3. Creando tu primer workflow</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A continuación, vamos a añadir un workflow que muestra las características esenciales de GitHub Actions.</p>
 </div>
@@ -701,10 +795,12 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 <li>
 <p>Copia el siguiente contenido YAML en el fichero anterior.</p>
 <div class="listingblock">
-<div class="title">maven-build.yml</div>
+<div class="title">github-actions-demo.yml</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s">Maven Build</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="rouge highlight"><code data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s">GitHub Actions Demo</span> <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="na">on</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">push</span><span class="pi">]</span> <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="na">env</span><span class="pi">:</span>
+  <span class="na">FORCE_JAVASCRIPT_ACTIONS_TO_NODE24</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
 <span class="na">jobs</span><span class="pi">:</span>
   <span class="na">Explore-GitHub-Actions</span><span class="pi">:</span> <i class="conum" data-value="3"></i><b>(3)</b>
     <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span> <i class="conum" data-value="4"></i><b>(4)</b>
@@ -713,27 +809,13 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
       <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"</span>
       <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."</span>
       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Check out repository code</span> <i class="conum" data-value="6"></i><b>(6)</b>
-        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span> <i class="conum" data-value="7"></i><b>(7)</b>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v6</span> <i class="conum" data-value="7"></i><b>(7)</b>
       <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "💡 The ${{ github.repository }} repository has been cloned to the runner."</span>
       <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "🖥️ The workflow is now ready to test your code on the runner."</span>
       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">List files in the repository</span>
         <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
           <span class="s">ls ${{ github.workspace }}</span>
-      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "🍏 This job's status is ${{ job.status }}."</span>
-
-  <span class="na">build</span><span class="pi">:</span>
-    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
-    <span class="na">needs</span><span class="pi">:</span> <span class="s">Explore-GitHub-Actions</span>
-    <span class="na">steps</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Check out repository code</span>
-        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Set up JDK </span><span class="m">17</span>
-        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-java@v2</span>
-        <span class="na">with</span><span class="pi">:</span>
-          <span class="na">java-version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">17'</span>
-          <span class="na">distribution</span><span class="pi">:</span> <span class="s1">'</span><span class="s">adopt'</span>
-      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build with Maven</span>
-        <span class="na">run</span><span class="pi">:</span> <span class="s">mvn -B package --file pom.xml</span></code></pre>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">echo "🍏 This job's status is ${{ job.status }}."</span></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -748,7 +830,7 @@ La entrega será mediante el envío de un informe y el acceso al profesor a los 
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Nombre del trabajo.</td>
+<td>Nombre del primer trabajo (job) del workflow.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
@@ -780,14 +862,27 @@ git push origin main</code></pre>
 </li>
 </ol>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_comprobando_el_resultado">Comprobando el resultado</h4>
 <div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Debes respetar estrictamente los espacios y saltos de línea del contenido YAML para evitar errores de sintaxis.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_comprobando_el_resultado">3.1. Comprobando el resultado</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -844,12 +939,256 @@ git push origin main</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_action_javamaven_build">4. Action Java/Maven build</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A continuación, vamos a añadir un workflow que muestra las construccion de un proyecto Java basado en Maven con GitHub Actions.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>En el directorio <code>.github/workflows</code> crea un fichero llamado <code>maven-build.yml</code>.</p>
+</li>
+<li>
+<p>Copia el siguiente contenido YAML:</p>
+<div class="listingblock">
+<div class="title">maven-build.yml</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="yaml"><span class="na">name</span><span class="pi">:</span> <span class="s">Maven Build</span>
+<span class="na">on</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">push</span><span class="pi">]</span>
+<span class="na">env</span><span class="pi">:</span>
+  <span class="na">FORCE_JAVASCRIPT_ACTIONS_TO_NODE24</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">build</span><span class="pi">:</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Check out repository code</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v6</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Set up JDK 21</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-java@v5</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">java-version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">21'</span>
+          <span class="na">distribution</span><span class="pi">:</span> <span class="s1">'</span><span class="s">temurin'</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build with Maven</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">mvn -B package --file pom.xml</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Publish JUnit Test Report</span> <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="na">if</span><span class="pi">:</span> <span class="s">always()</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">mikepenz/action-junit-report@v6</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">report_paths</span><span class="pi">:</span> <span class="s">target/surefire-reports/TEST-*.xml</span>
+          <span class="na">detailed_summary</span><span class="pi">:</span> <span class="kc">true</span>
+          <span class="na">include_passed</span><span class="pi">:</span> <span class="kc">true</span>
+          <span class="na">check_title_template</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{SUITE_NAME}}/{{TEST_NAME}}"</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Nombre del trabajo (job) que se encarga de construir el proyecto con Maven.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Paso para configurar el JDK 21 en el runner.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Paso para ejecutar el comando de construcción de Maven.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Paso para publicar el informe de tests de JUnit. Este paso se ejecuta siempre, incluso si el paso anterior falla, gracias a la condición <code>if: always()</code>.</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_resultado_del_build">4.1. Resultado del build</h3>
+<div class="paragraph">
+<p>Después de hacer <code>push</code> a la rama remota, el workflow se ejecutará automáticamente.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Para comprobar el resultado, seguimos los mismos pasos que en el apartado anterior para acceder al resumen de la ejecución del workflow. El resumen muestra además un informe detallado de los tests ejecutados, gracias al paso de publicación del informe de JUnit que añadimos en el workflow.</p>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/maven-build-summary.png" alt="maven build summary">
+</div>
+</div>
+</li>
+<li>
+<p>Pulsamos en el nombre del trabajo (<code>build</code> en la imagen anterior) y vemos una descripción de cada una de los pasos o steps del trabajo.</p>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/maven-build-job-summary.png" alt="maven build job summary">
+</div>
+</div>
+</li>
+<li>
+<p>Además podemos ver el log de ejecución de cada uno de los pasos. En la construcción con Maven, por ejemplo, podemos ver el resultado de los tests ejecutados (usando el filtro <code>TESTS</code> en la imagen siguiente).</p>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/maven-build-job-step.png" alt="maven build job step">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_estado_de_la_construcción">5. Estado de la construcción</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Tras la ejecución del workflow, el estado de la construcción se muestra en la página principal del repositorio, junto al nombre de cada commit. El estado puede ser <code>success</code>, <code>failure</code> o <code>pending</code> dependiendo del resultado de la ejecución</p>
+</div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/actions-status.png" alt="actions status">
+</div>
+</div>
+<div class="paragraph">
+<p>Además, es habitual generar un <strong>badge de estado de la construcción</strong> para incorporarlo en el <code>README.md</code> del repositorio. Para ello, accede a la página de <code>Actions</code> y pulsa en el botón <code>Create status badge</code> que aparece en la parte derecha de la pantalla.</p>
+</div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/create-status-badge.png" alt="create status badge">
+</div>
+</div>
+<div class="paragraph">
+<p>Esto generará un código Markdown que puedes incluir en el <code>README.md</code> de tu repositorio para mostrar el estado del workflow.</p>
+</div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/create-status-badge-copy-md.png" alt="create status badge copy md">
+</div>
+</div>
+<div class="paragraph">
+<p>Pegando este código en el <code>README.md</code> y haciendo <code>push</code> a la rama remota, el badge de estado de la construcción aparecerá en la página principal del repositorio.</p>
+</div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="modules/first-steps/images/create-status-badge-readme.png" alt="create status badge readme">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusión">Conclusión</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>En esta sección hemos visto cómo crear un workflow de GitHub Actions para ejecutar un trabajo de construcción con Maven. Hemos comprobado el resultado del workflow y el informe de tests generado. Además, hemos visto cómo se muestra el estado de la construcción en la página principal del repositorio y cómo generar un badge de estado para incluirlo en el <code>README.md</code> del repositorio.</p>
+</div>
+</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-19 12:41:02 UTC
+Last updated 2026-03-25 21:48:05 UTC
 </div>
 </div>
+<style>
+    .doc .listingblock > .content {
+      position: relative;
+    }
+
+    .doc .listingblock code[data-lang]::before {
+      content: none;
+    }
+
+    .doc .source-toolbox {
+      display: flex;
+      position: absolute;
+      visibility: hidden;
+      top: 0.25rem;
+      right: 0.5rem;
+      color: #808080;
+      white-space: nowrap;
+      font-size: 0.85em;
+    }
+
+    .doc .listingblock:hover .source-toolbox {
+      visibility: visible;
+    }
+
+    .doc .source-toolbox .source-lang {
+      font-family: "Droid Sans Mono", "DejaVu Sans Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.075em;
+    }
+
+    .doc .source-toolbox > :not(:last-child)::after {
+      content: "|";
+      letter-spacing: 0;
+      padding: 0 1ch;
+    }
+
+    .doc .source-toolbox .copy-button {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      border: none;
+      color: inherit;
+      outline: none;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      width: 1em;
+      height: 1em;
+    }
+
+    .doc .source-toolbox .copy-icon {
+      flex: none;
+      width: inherit;
+      height: inherit;
+      filter: invert(50.2%);
+      margin-top: 0.05em;
+    }
+
+    .doc .source-toolbox .copy-toast {
+      flex: none;
+      position: relative;
+      display: inline-flex;
+      justify-content: center;
+      margin-top: 1em;
+      border-radius: 0.25em;
+      padding: 0.5em;
+      cursor: auto;
+      opacity: 0;
+      transition: opacity 0.5s ease 0.75s;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+    }
+
+    .doc .source-toolbox .copy-toast::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 1em;
+      height: 1em;
+      border: 0.55em solid transparent;
+      border-left-color: rgba(0, 0, 0, 0.8);
+      transform: rotate(-90deg) translateX(50%) translateY(50%);
+      transform-origin: left;
+    }
+
+    .doc .source-toolbox .copy-button.clicked .copy-toast {
+      opacity: 1;
+      transition: none;
+    }
+
+    .imageblock .title {
+      text-align: center;
+    }
+    </style>
+    <script src="copy-to-clipboard.js"></script>
 </body>
 </html>
